@@ -1,0 +1,1 @@
+# reducci-n_de_colores
