@@ -38,6 +38,8 @@ def save_history(history: list[dict]) -> None:
 def main():
     if "history" not in st.session_state:
         st.session_state["history"] = load_history()
+    if "last_result" not in st.session_state:
+        st.session_state["last_result"] = None
 
     st.set_page_config(page_title="Cuantizador de Color", layout="wide")
     st.title("🎨 Cuantizador de Color por Clustering")
@@ -49,24 +51,27 @@ def main():
 
         if pressed:
             result = quantize(original, k_value)
-            quantized_array = result["quantized_array"]
-            centroids_hex = result["centroids_hex"]
-            centroids_names = result["centroids_names"]
-            elapsed = result["elapsed_seconds"]
-
-            render_viewer(original, quantized_array, centroids_hex, centroids_names)
-
+            st.session_state["last_result"] = result
             st.session_state["history"].append(
                 {
                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     "archivo": st.session_state.get("filename", "-"),
                     "K": k_value,
-                    "tiempo (s)": round(elapsed, 3),
-                    "colores (hex)": centroids_hex,
-                    "nombres de color": centroids_names,
+                    "tiempo (s)": round(result["elapsed_seconds"], 3),
+                    "colores (hex)": result["centroids_hex"],
+                    "nombres de color": result["centroids_names"],
                 }
             )
             save_history(st.session_state["history"])
+
+        last_result = st.session_state.get("last_result")
+        if last_result is not None:
+            quantized_array = last_result["quantized_array"]
+            centroids_hex = last_result["centroids_hex"]
+            centroids_names = last_result["centroids_names"]
+            elapsed = last_result["elapsed_seconds"]
+
+            render_viewer(original, quantized_array, centroids_hex, centroids_names)
 
     st.subheader("📋 Historial de iteraciones")
     render_history()

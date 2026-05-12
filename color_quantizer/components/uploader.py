@@ -11,5 +11,6 @@ def render_uploader() -> Optional["numpy.ndarray"]:
         arr = load_image(uploaded)
         st.session_state["original_array"] = arr
         st.session_state["filename"] = uploaded.name
+        st.session_state["last_result"] = None
         return arr
     return None
