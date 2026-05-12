@@ -5,7 +5,12 @@ import streamlit as st
 from core.utils import array_to_image_bytes, array_to_pil
 
 
-def render_viewer(original_array, quantized_array, centroids_hex: List[str]):
+def render_viewer(
+    original_array,
+    quantized_array,
+    centroids_hex: List[str],
+    centroids_names: List[str],
+):
     download_format = st.radio(
         "Formato de descarga",
         ["png", "jpg"],
@@ -39,11 +44,12 @@ def render_viewer(original_array, quantized_array, centroids_hex: List[str]):
 
     # Render color swatches below
     swatches_html = ""
-    for hx in centroids_hex:
+    for hx, name in zip(centroids_hex, centroids_names):
         swatches_html += (
             f'<div style="display:inline-block;margin:6px;text-align:center;">'
             f'<div style="width:64px;height:36px;background:{hx};border:1px solid #000"></div>'
             f'<div style="font-size:12px">{hx}</div>'
+            f'<div style="font-size:12px">{name}</div>'
             f'</div>'
         )
 

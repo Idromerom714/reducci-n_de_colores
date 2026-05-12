@@ -23,5 +23,9 @@ def render_history():
         df["colores (hex)"] = df["colores (hex)"].apply(
             lambda x: ", ".join(x) if isinstance(x, (list, tuple)) else x
         )
+    if "nombres de color" in df.columns:
+        df["nombres de color"] = df["nombres de color"].apply(
+            lambda x: ", ".join(x) if isinstance(x, (list, tuple)) else x
+        )
 
     st.dataframe(df)

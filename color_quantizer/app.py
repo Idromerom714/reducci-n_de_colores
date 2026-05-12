@@ -51,9 +51,10 @@ def main():
             result = quantize(original, k_value)
             quantized_array = result["quantized_array"]
             centroids_hex = result["centroids_hex"]
+            centroids_names = result["centroids_names"]
             elapsed = result["elapsed_seconds"]
 
-            render_viewer(original, quantized_array, centroids_hex)
+            render_viewer(original, quantized_array, centroids_hex, centroids_names)
 
             st.session_state["history"].append(
                 {
@@ -62,6 +63,7 @@ def main():
                     "K": k_value,
                     "tiempo (s)": round(elapsed, 3),
                     "colores (hex)": centroids_hex,
+                    "nombres de color": centroids_names,
                 }
             )
             save_history(st.session_state["history"])
