@@ -1,4 +1,6 @@
 from typing import Any
+import io
+
 import numpy as np
 from PIL import Image
 
@@ -19,3 +21,16 @@ def load_image(uploaded_file: Any) -> np.ndarray:
 def array_to_pil(array: np.ndarray) -> Image.Image:
     """Convert a uint8 numpy array (H, W, 3) back to a PIL Image."""
     return Image.fromarray(array)
+
+
+def array_to_image_bytes(array: np.ndarray, image_format: str) -> bytes:
+    """Convert a uint8 numpy array into encoded image bytes."""
+    buffer = io.BytesIO()
+    image = array_to_pil(array)
+
+    save_format = "JPEG" if image_format.lower() == "jpg" else "PNG"
+    if save_format == "JPEG" and image.mode != "RGB":
+        image = image.convert("RGB")
+
+    image.save(buffer, format=save_format)
+    return buffer.getvalue()
