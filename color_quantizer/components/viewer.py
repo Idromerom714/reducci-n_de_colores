@@ -1,4 +1,5 @@
 from typing import List
+from pathlib import Path
 
 import streamlit as st
 
@@ -11,6 +12,7 @@ def render_viewer(
     centroids_hex: List[str],
     centroids_names: List[str],
 ):
+    image_name = Path(st.session_state.get("filename", "imagen")).stem
     download_format = st.radio(
         "Formato de descarga",
         ["png", "jpg"],
@@ -24,7 +26,7 @@ def render_viewer(
     cols[0].download_button(
         label="Descargar original",
         data=original_bytes,
-        file_name=f"original_1.{download_format}",
+        file_name=f"{image_name}_original.{download_format}",
         mime="image/jpeg" if download_format == "jpg" else "image/png",
         use_container_width=True,
     )
@@ -37,7 +39,7 @@ def render_viewer(
     cols[1].download_button(
         label="Descargar cuantizada",
         data=quantized_bytes,
-        file_name=f"cuantizada_1.{download_format}",
+        file_name=f"{image_name}_cuantizada_{k}colores.{download_format}",
         mime="image/jpeg" if download_format == "jpg" else "image/png",
         use_container_width=True,
     )
